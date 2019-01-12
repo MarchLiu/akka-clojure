@@ -19,7 +19,7 @@
     (println (str "receive a post order " fun " : " (class fun)))
     (send (.getState this) fun)))
 
-(testing "tests for clojure state actor by creator"
+(deftest state-test "tests for clojure state actor by creator"
   (let [system (ActorSystem/create "test")
         test-kit (TestKit. system)
         await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))

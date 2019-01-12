@@ -13,7 +13,7 @@
   (println (str "receive a long message " message " from " this))
   (.tell (.getSender this) (str "reply message for " message) (.getSelf this)))
 
-(testing "tests for basic actor workflow"
+(deftest basic-test "tests for basic actor workflow"
   (let [system (ActorSystem/create "test")
         test-kit (TestKit. system)
         await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))
@@ -29,7 +29,7 @@
     (.expectMsgClass test-kit String)
     (TestKit/shutdownActorSystem system)))
 
-(testing "tests for clojure actor by creator"
+(deftest init-test "tests for clojure actor by creator"
   (let [system (ActorSystem/create "test")
         test-kit (TestKit. system)
         await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))
