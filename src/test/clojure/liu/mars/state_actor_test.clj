@@ -10,11 +10,11 @@
           (fn [_ message]
             (:order message)))
 (defmethod receiver :get [this message]
-  (println (str "receive a get message " message " in " this))
-  (.tell (.getSender this) (get @(.getState this) (:key message)) (.getSelf this)))
+  (println (str "receive a get message " message " for state " @(.getState this)))
+  (! (.getSender this) (get @(.getState this) (:key message)) (.getSelf this)))
 (defmethod receiver :get-in [this message]
-  (println (str "receive a get in message " message " in " this))
-  (.tell (.getSender this) (get-in @(.getState this) (:path message)) (.getSelf this)))
+  (println (str "receive a get in message " message " for state " @(.getState this)))
+  (! (.getSender this) (get-in @(.getState this) (:path message)) (.getSelf this)))
 (defmethod receiver :post [this message]
   (let [fun (:function message)]
     (println (str "receive a post order " fun " : " (class fun)))
