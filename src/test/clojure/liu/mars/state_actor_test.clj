@@ -10,10 +10,10 @@
           (fn [_ message]
             (:order message)))
 (defmethod receiver :get [this message]
-  (println (str "receive a get message " message " from " this))
+  (println (str "receive a get message " message " in " this))
   (.tell (.getSender this) (get @(.getState this) (:key message)) (.getSelf this)))
 (defmethod receiver :get-in [this message]
-  (println (str "receive a get in message " message " from " this))
+  (println (str "receive a get in message " message " in " this))
   (.tell (.getSender this) (get-in @(.getState this) (:path message)) (.getSelf this)))
 (defmethod receiver :post [this message]
   (let [fun (:function message)]
@@ -72,11 +72,8 @@
                                                       (is (= text-message message)))))
       (is (= text-message (?? actor {:order :get :key :data})))
       (! actor {:order :post :function #(assoc % :post-data runtime-message)})
-      (.tell actor {:order :get-in :path [:post-data]} self)
-      (await)
-      (.expectMsgPF test-kit "check get in" (reify Function
-                                              (apply [this message]
-                                                (is (= runtime-message message)))))
+      (let [future (? actor {:order :get-in :path [:post-data]})]
+        (is (= runtime-message @future)))
       (.stop system actor)
       (finally
         (TestKit/shutdownActorSystem system)))))

@@ -1,24 +1,26 @@
 (ns liu.mars.actor
   (:import (akka.pattern Patterns)
-           (scala.concurrent Await)
-           (akka.util Timeout)
            (java.time Duration)
            (akka.actor ActorRef)))
 
 (defn ??
-  ([actor message  ^Timeout timeout]
-   (-> (Patterns/ask actor message timeout)
-       (Await/result (.duration timeout))))
+  ([actor message ^Duration timeout]
+   (-> actor
+       (Patterns/ask message timeout)
+       (.toCompletableFuture)
+       (.get)))
   ([actor message]
-   (let [timeout (Timeout/create (Duration/ofSeconds 1))]
-     (-> (Patterns/ask actor message timeout)
-         (Await/result (.duration timeout))))))
+   (let [timeout (Duration/ofSeconds 1)]
+     (?? actor message timeout))))
 
 (defn ?
-  ([actor message ^Timeout timeout]
-   (Patterns/ask actor message timeout))
+  ([actor message ^Duration timeout]
+   (future (-> actor
+               (Patterns/ask message timeout)
+               (.toCompletableFuture)
+               (.get))))
   ([actor message]
-   (let [timeout (Timeout/create (Duration/ofSeconds 1))]
+   (let [timeout (Duration/ofSeconds 1)]
      (? actor message timeout))))
 
 (defn !

@@ -7,10 +7,10 @@
 
 (defmulti receiver "receive matchers for basic workflow" (fn [this message] (class message)))
 (defmethod receiver String [this message]
-  (println (str "receive a text message " message " from " this))
+  (println (str "receive a text message " message " in " this))
   (.tell (.getSender this) (str "reply message for " message) (.getSelf this)))
 (defmethod receiver Long [this message]
-  (println (str "receive a long message " message " from " this))
+  (println (str "receive a long message " message " in " this))
   (.tell (.getSender this) (str "reply message for " message) (.getSelf this)))
 
 (deftest basic-test
