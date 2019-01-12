@@ -13,7 +13,8 @@
   (println (str "receive a long message " message " from " this))
   (.tell (.getSender this) (str "reply message for " message) (.getSelf this)))
 
-(deftest basic-test "tests for basic actor workflow"
+(deftest basic-test
+  "tests for basic actor workflow"
   (let [system (ActorSystem/create "test")
         test-kit (TestKit. system)
         await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))
@@ -24,29 +25,29 @@
     (.expectMsgPF test-kit "check text messsage" (reify Function
                                                    (apply [this message]
                                                      (is (= "reply message for test message" message)))))
-    (.tell actor (long 2131431234) self)
+    (.tell actor 2131431234 self)
     (await)
     (.expectMsgClass test-kit String)
     (TestKit/shutdownActorSystem system)))
 
-(deftest init-test "tests for clojure actor by creator"
+(deftest init-test
+  "tests for clojure actor by creator"
   (let [system (ActorSystem/create "test")
         test-kit (TestKit. system)
         await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))
         self (.getRef test-kit)
         initiator (fn [actor]
                     (doto actor
-                        (.setPreStart #(println (str % " is going to start")))
-                        (.setPostStop #(println (str % " stopped")))))
+                      (.setPreStart #(println (str % " is going to start")))
+                      (.setPostStop #(println (str % " stopped")))))
         actor (.actorOf system (ClojureActor/propsWithInit initiator receiver))]
     (.tell actor "test message" self)
     (await)
     (.expectMsgPF test-kit "check text messsage" (reify Function
                                                    (apply [this message]
                                                      (is (= "reply message for test message" message)))))
-    (.tell actor (long 2131431234) self)
+    (.tell actor 2131431234 self)
     (await)
     (.expectMsgClass test-kit String)
     (.stop system actor)
     (TestKit/shutdownActorSystem system)))
-

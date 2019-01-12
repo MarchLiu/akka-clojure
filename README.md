@@ -1,10 +1,19 @@
 # akka-clojure
 
-A Clojure library designed to ... well, that part is up to you.
+Support akka for clojure. 
 
 ## Usage
 
-FIXME
+For Leiningen:
+```
+[liu.mars/akka-clojure "0.1.2"]
+```
+
+## What's New
+
+ - 0.1.2 add operator ?, ?? and !
+ - 0.1.1 add state in clojure actor
+ - 0.1.0 clojure actor
 
 ## License
 

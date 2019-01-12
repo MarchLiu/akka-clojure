@@ -1,4 +1,5 @@
 (ns liu.mars.state-actor-test
+  (:require [liu.mars.actor :refer :all])
   (:require [clojure.test :refer :all])
   (:import (akka.actor ActorSystem)
            (liu.mars ClojureActor)
@@ -19,7 +20,8 @@
     (println (str "receive a post order " fun " : " (class fun)))
     (send (.getState this) fun)))
 
-(deftest state-test "tests for clojure state actor by creator"
+(deftest state-test
+  "tests for clojure state actor by creator"
   (let [system (ActorSystem/create "test")
         test-kit (TestKit. system)
         await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))
@@ -39,6 +41,37 @@
                                                     (apply [this message]
                                                       (is (= text-message message)))))
       (.tell actor {:order :post :function #(assoc % :post-data runtime-message)} self)
+      (.tell actor {:order :get-in :path [:post-data]} self)
+      (await)
+      (.expectMsgPF test-kit "check get in" (reify Function
+                                              (apply [this message]
+                                                (is (= runtime-message message)))))
+      (.stop system actor)
+      (finally
+        (TestKit/shutdownActorSystem system)))))
+
+(deftest op-test
+  "tests for operators"
+  (let [system (ActorSystem/create "test")
+        test-kit (TestKit. system)
+        await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))
+        self (.getRef test-kit)
+        text-message "a text message save in state"
+        runtime-message "this data post in runtime"
+        initiator (fn [actor]
+                    (doto actor
+                      (.setPreStart #(println (str % " is going to start")))
+                      (.setPostStop #(println (str % " stopped"))))
+                    (send (.getState actor) #(assoc % :data text-message)))
+        actor (.actorOf system (ClojureActor/propsWithInit initiator receiver))]
+    (try
+      (.tell actor {:order :get :key :data} self)
+      (await)
+      (.expectMsgPF test-kit "check get messsage" (reify Function
+                                                    (apply [this message]
+                                                      (is (= text-message message)))))
+      (is (= text-message (?? actor {:order :get :key :data})))
+      (! actor {:order :post :function #(assoc % :post-data runtime-message)})
       (.tell actor {:order :get-in :path [:post-data]} self)
       (await)
       (.expectMsgPF test-kit "check get in" (reify Function
