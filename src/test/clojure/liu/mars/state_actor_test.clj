@@ -65,7 +65,7 @@
                     (send (.getState actor) #(assoc % :data text-message)))
         actor (.actorOf system (ClojureActor/propsWithInit initiator receiver))]
     (try
-      (.tell actor {:order :get :key :data} self)
+      (! actor {:order :get :key :data} self)
       (await)
       (.expectMsgPF test-kit "check get messsage" (reify Function
                                                     (apply [this message]
@@ -74,6 +74,9 @@
       (! actor {:order :post :function #(assoc % :post-data runtime-message)})
       (let [future (? actor {:order :get-in :path [:post-data]})]
         (is (= runtime-message @future)))
+      (! actor {:order :post :function #(assoc % :message runtime-message)})
+      (let [result (?? actor {:order :get :key :message})]
+        (is (= runtime-message result)))
       (.stop system actor)
       (finally
         (TestKit/shutdownActorSystem system)))))
