@@ -1,8 +1,10 @@
 package liu.mars;
 
 import akka.actor.*;
+import clojure.lang.Agent;
 import clojure.lang.IFn;
 import clojure.lang.MultiFn;
+import jaskell.util.CR;
 import scala.Option;
 import scala.PartialFunction;
 import scala.runtime.AbstractPartialFunction;
@@ -11,6 +13,11 @@ import scala.runtime.BoxedUnit;
 import java.util.Optional;
 
 public class ClojureActor extends AbstractActor {
+    static private String actor_namespace = "liu.mars.actor";
+    static {
+        CR.require(actor_namespace);
+    }
+    private Agent state;
     private MultiFn receiver;
     private IFn aroundReceive;
     private IFn preStart;
@@ -24,6 +31,7 @@ public class ClojureActor extends AbstractActor {
     private IFn aroundPostRestart;
     private IFn supervisor;
     private IFn unhandled;
+
 
     protected ClojureActor(MultiFn fn) {
         this.receiver = fn;
@@ -52,14 +60,27 @@ public class ClojureActor extends AbstractActor {
     }
 
     public static Props props(MultiFn fn){
-        return Props.create(ClojureActor.class, () -> new ClojureActor(fn));
+        return Props.create(ClojureActor.class, () -> {
+            var result = new ClojureActor(fn);
+            result.state = (Agent) CR.invoke(actor_namespace, "new-state");
+            return result;
+        });
     }
 
     public static Props propsWithInit(IFn initiator, MultiFn fn){
         return Props.create(ClojureActor.class, () -> {
             var result = new ClojureActor(fn);
+            result.state = (Agent) CR.invoke(actor_namespace, "new-state");
             initiator.invoke(result);
-            result.receiver = fn;
+            return result;
+        });
+    }
+
+    public static Props propsWithStateInit(IFn initiator, Agent state, MultiFn fn){
+        return Props.create(ClojureActor.class, () -> {
+            var result = new ClojureActor(fn);
+            result.state = (Agent) state;
+            initiator.invoke(result);
             return result;
         });
     }
@@ -277,5 +298,7 @@ public class ClojureActor extends AbstractActor {
         getContext().unbecome();
     }
 
-
+    public Agent getState() {
+        return state;
+    }
 }

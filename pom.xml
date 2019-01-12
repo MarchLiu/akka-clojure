@@ -3,7 +3,7 @@
   <groupId>liu.mars</groupId>
   <artifactId>akka-clojure</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <name>akka-clojure</name>
   <description>FIXME: write description</description>
   <url>http://example.com/FIXME</url>
@@ -13,7 +13,9 @@
       <url>http://www.eclipse.org/legal/epl-v10.html</url>
     </license>
   </licenses>
-  <scm/>
+  <scm>
+    <tag>d57b88856bc62c014ac548a781e8752579748377</tag>
+  </scm>
   <build>
     <sourceDirectory>src/main/clojure</sourceDirectory>
     <testSourceDirectory>src/test/clojure</testSourceDirectory>
@@ -86,6 +88,11 @@
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-actor_2.12</artifactId>
       <version>2.5.19</version>
+    </dependency>
+    <dependency>
+      <groupId>liu.mars</groupId>
+      <artifactId>jaskell</artifactId>
+      <version>0.1.1</version>
     </dependency>
     <dependency>
       <groupId>com.typesafe.akka</groupId>
