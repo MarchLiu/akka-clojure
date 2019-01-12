@@ -3,7 +3,7 @@
   <groupId>liu.mars</groupId>
   <artifactId>akka-clojure</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <name>akka-clojure</name>
   <description>FIXME: write description</description>
   <url>http://example.com/FIXME</url>
@@ -14,7 +14,7 @@
     </license>
   </licenses>
   <scm>
-    <tag>d57b88856bc62c014ac548a781e8752579748377</tag>
+    <tag>51c8078ea5e9583412918f891479f83267eb965e</tag>
   </scm>
   <build>
     <sourceDirectory>src/main/clojure</sourceDirectory>

@@ -3,16 +3,6 @@
            (java.time Duration)
            (akka.actor ActorRef)))
 
-(defn ??
-  ([actor message ^Duration timeout]
-   (-> actor
-       (Patterns/ask message timeout)
-       (.toCompletableFuture)
-       (.get)))
-  ([actor message]
-   (let [timeout (Duration/ofSeconds 1)]
-     (?? actor message timeout))))
-
 (defn ?
   ([actor message ^Duration timeout]
    (future (-> actor
@@ -22,6 +12,13 @@
   ([actor message]
    (let [timeout (Duration/ofSeconds 1)]
      (? actor message timeout))))
+
+(defn ??
+  ([actor message ^Duration timeout]
+    @(? actor message timeout))
+  ([actor message]
+    @(? actor message)))
+
 
 (defn !
   ([actor message sender]
