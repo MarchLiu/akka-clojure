@@ -11,7 +11,7 @@ For Leiningen:
 
 ## What's New
 
- - 0.1.2 add operator ?, ?? and !
+ - 0.1.2 add operators ?, ?? and !
  - 0.1.1 add state in clojure actor
  - 0.1.0 clojure actor
 
