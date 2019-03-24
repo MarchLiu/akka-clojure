@@ -19,6 +19,15 @@
   ([actor message]
     @(? actor message)))
 
+(defn ?->
+  ([actor message sender timeout dispatcher]
+   (-> (? actor message timeout)
+       (Patterns/pipe dispatcher)
+       (.to sender)))
+  ([actor message sender dispatcher]
+   (-> (? actor message)
+       (Patterns/pipe dispatcher)
+       (.to sender))))
 
 (defn !
   ([actor message sender]

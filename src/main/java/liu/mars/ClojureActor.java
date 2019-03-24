@@ -1,6 +1,8 @@
 package liu.mars;
 
-import akka.actor.*;
+import akka.actor.AbstractActor;
+import akka.actor.Props;
+import akka.actor.SupervisorStrategy;
 import clojure.lang.Agent;
 import clojure.lang.IFn;
 import clojure.lang.MultiFn;
@@ -301,4 +303,5 @@ public class ClojureActor extends AbstractActor {
     public Agent getState() {
         return state;
     }
+
 }
