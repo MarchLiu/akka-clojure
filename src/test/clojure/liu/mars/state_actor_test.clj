@@ -34,6 +34,7 @@
                       (.setPostStop #(println (str % " stopped"))))
                     (send (.getState actor) #(assoc % :data text-message)))
         actor (.actorOf system (ClojureActor/propsWithInit initiator receiver))]
+    (Thread/sleep 1000)
     (try
       (.tell actor {:order :get :key :data} self)
       (await)
@@ -64,6 +65,7 @@
                       (.setPostStop #(println (str % " stopped"))))
                     (send (.getState actor) #(assoc % :data text-message)))
         actor (.actorOf system (ClojureActor/propsWithInit initiator receiver))]
+    (Thread/sleep 1000)
     (try
       (! actor {:order :get :key :data} self)
       (await)
