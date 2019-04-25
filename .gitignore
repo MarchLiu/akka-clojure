@@ -23,3 +23,7 @@
 hs_err_pid*
 .lein-repl-history
 .nrepl-port
+.idea/**
+target/**
+.lein-*
+*.iml
