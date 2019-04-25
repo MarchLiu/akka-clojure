@@ -6,7 +6,7 @@ Support akka for clojure.
 
 For Leiningen:
 ```
-[liu.mars/akka-clojure "0.1.2"]
+[liu.mars/akka-clojure "0.1.5"]
 ```
 
 ## What's New
