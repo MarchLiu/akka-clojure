@@ -11,6 +11,7 @@ For Leiningen:
 
 ## What's New
 
+ - 0.1.5 config-value function create ConfigValue data event simple value
  - 0.1.4 add config-value function for convert clojure code to typesafe config
  - 0.1.2 add operators ?, ?? and !
  - 0.1.1 add state in clojure actor
