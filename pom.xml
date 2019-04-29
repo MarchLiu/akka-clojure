@@ -3,7 +3,7 @@
   <groupId>liu.mars</groupId>
   <artifactId>akka-clojure</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.5</version>
+  <version>0.1.6</version>
   <name>akka-clojure</name>
   <description>akka toolkit for clojure programmer</description>
   <url>https://github.com/MarchLiu/akka-clojure</url>
@@ -14,7 +14,7 @@
     </license>
   </licenses>
   <scm>
-    <tag>dece75597050208b9ec442c0e28f087d2a4d0f97</tag>
+    <tag>0359f0ce18332ccc0e3413908443e0e4e6ef633d</tag>
   </scm>
   <build>
     <sourceDirectory>src/main/clojure</sourceDirectory>

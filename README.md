@@ -11,6 +11,7 @@ For Leiningen:
 
 ## What's New
 
+ - 0.1.6 fixed bug in pipeline operator `?->`
  - 0.1.5 config-value function create ConfigValue data even simple value
  - 0.1.4 add config-value function for convert clojure code to typesafe config
  - 0.1.2 add operators ?, ?? and !

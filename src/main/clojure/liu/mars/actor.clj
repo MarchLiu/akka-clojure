@@ -1,8 +1,9 @@
 (ns liu.mars.actor
   (:import (akka.pattern Patterns)
            (java.time Duration)
-           (akka.actor ActorRef)
-           (com.typesafe.config ConfigValueFactory)))
+           (akka.actor ActorRef AbstractActor)
+           (com.typesafe.config ConfigValueFactory)
+           (akka.dispatch Dispatcher)))
 
 (defn ?
   ([actor message ^Duration timeout]
@@ -21,14 +22,14 @@
     @(? actor message)))
 
 (defn ?->
-  ([actor message sender timeout dispatcher]
-   (-> (? actor message timeout)
+  ([^AbstractActor actor message sender ^Dispatcher dispatcher ^Duration timeout]
+   (-> actor
+       (Patterns/ask message timeout)
+       (.toCompletableFuture)
        (Patterns/pipe dispatcher)
        (.to sender)))
   ([actor message sender dispatcher]
-   (-> (? actor message)
-       (Patterns/pipe dispatcher)
-       (.to sender))))
+   (?-> actor message sender dispatcher (Duration/ofSeconds 1))))
 
 (defn !
   ([actor message sender]
