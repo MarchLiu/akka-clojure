@@ -1,9 +1,11 @@
 (ns liu.mars.actor
   (:import (akka.pattern Patterns)
            (java.time Duration)
-           (akka.actor ActorRef AbstractActor)
+           (akka.actor ActorRef AbstractActor ActorSystem)
            (com.typesafe.config ConfigValueFactory)
-           (akka.dispatch Dispatcher)))
+           (akka.dispatch Dispatcher)
+           (clojure.lang MultiFn IFn Agent)
+           (liu.mars ClojureActor)))
 
 (defn ?
   ([actor message ^Duration timeout]
@@ -37,6 +39,13 @@
   ([actor message]
    (.tell actor message (ActorRef/noSender))))
 
+(defn actor-of
+  ([^ActorSystem system ^MultiFn receiver ^String name]
+   (.actorOf system (ClojureActor/props receiver) name))
+  ([^ActorSystem system ^IFn init ^MultiFn receiver ^String name]
+   (.actorOf system (ClojureActor/propsWithInit init receiver) name))
+  ([^ActorSystem system ^IFn init ^Agent state ^MultiFn receiver ^String name]
+   (.actorOf system (ClojureActor/propsWithStateInit init state receiver) name)))
 
 (defn new-state
   []

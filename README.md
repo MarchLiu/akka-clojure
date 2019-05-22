@@ -6,11 +6,12 @@ Support akka for clojure.
 
 For Leiningen:
 ```
-[liu.mars/akka-clojure "0.1.5"]
+[liu.mars/akka-clojure "0.1.7"]
 ```
 
 ## What's New
 
+ - 0.1.7 add actor of functions for ClojureActor create
  - 0.1.6 fixed bug in pipeline operator `?->`
  - 0.1.5 config-value function create ConfigValue data even simple value
  - 0.1.4 add config-value function for convert clojure code to typesafe config
