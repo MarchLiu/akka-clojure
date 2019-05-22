@@ -304,4 +304,7 @@ public class ClojureActor extends AbstractActor {
         return state;
     }
 
+    protected void setState(Agent state) {
+        this.state = state;
+    }
 }
