@@ -1,8 +1,9 @@
 (ns liu.mars.actor
+  (:require [jaskell.util :refer [keywordize-it]])
   (:import (akka.pattern Patterns)
            (java.time Duration)
            (akka.actor ActorRef AbstractActor ActorSystem)
-           (com.typesafe.config ConfigValueFactory)
+           (com.typesafe.config ConfigValueFactory ConfigValue)
            (akka.dispatch Dispatcher)
            (clojure.lang MultiFn IFn Agent)
            (liu.mars ClojureActor)))
@@ -71,3 +72,9 @@
                          (into [] (map config-value) data))
     (keyword? data) (name data)
     :else (ConfigValueFactory/fromAnyRef data)))
+
+(defn config-value-to-clj
+  [^ConfigValue config]
+  (-> config
+      .unwrapped
+      keywordize-it))

@@ -11,6 +11,7 @@ For Leiningen:
 
 ## What's New
 
+ - 0.1.9 add config value to clojure function 
  - 0.1.8 add a protected clojure actor state 
  - 0.1.7 add actor of functions for ClojureActor create
  - 0.1.6 fixed bug in pipeline operator `?->`

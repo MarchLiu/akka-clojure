@@ -1,4 +1,4 @@
-(defproject liu.mars/akka-clojure "0.1.8"
+(defproject liu.mars/akka-clojure "0.1.9"
   :description "akka toolkit for clojure programmer"
   :url "https://github.com/MarchLiu/akka-clojure"
   :license {:name "Eclipse Public License"
@@ -7,8 +7,8 @@
   :java-source-paths ["src/main/java"]
   :test-paths ["src/test/clojure"]
   :dependencies [[org.clojure/clojure "1.10.0"]
-                 [com.typesafe.akka/akka-actor_2.12 "2.5.19"]
-                 [liu.mars/jaskell "0.2.2"]]
+                 [com.typesafe.akka/akka-actor_2.12 "2.5.22"]
+                 [liu.mars/jaskell "0.2.7"]]
   :deploy-repositories [["releases" :clojars]
                         ["snapshots" :clojars]]
   :profiles {:test {:dependencies          [[com.typesafe.akka/akka-testkit_2.12 "2.5.22"]]
