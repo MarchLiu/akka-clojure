@@ -3,7 +3,7 @@
   (:import (akka.pattern Patterns)
            (java.time Duration)
            (akka.actor ActorRef AbstractActor ActorSystem)
-           (com.typesafe.config ConfigValueFactory ConfigValue)
+           (com.typesafe.config ConfigValueFactory ConfigValue Config)
            (akka.dispatch Dispatcher)
            (clojure.lang MultiFn IFn Agent)
            (liu.mars ClojureActor)))
@@ -74,7 +74,12 @@
     :else (ConfigValueFactory/fromAnyRef data)))
 
 (defn config-value-to-clj
-  [^ConfigValue config]
-  (-> config
-      .unwrapped
-      keywordize-it))
+  ([^ConfigValue config]
+   (-> config
+       .unwrapped
+       keywordize-it))
+  ([^Config config ^String path]
+   (-> config
+       (.getValue path)
+       .unwrapped
+       keywordize-it)))
