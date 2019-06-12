@@ -4,9 +4,9 @@
            (java.time Duration)
            (akka.actor ActorRef AbstractActor ActorSystem)
            (com.typesafe.config ConfigValueFactory ConfigValue Config)
-           (akka.dispatch Dispatcher)
            (clojure.lang MultiFn IFn Agent)
-           (liu.mars ClojureActor)))
+           (liu.mars ClojureActor)
+           (scala.concurrent ExecutionContext)))
 
 (defn ?
   ([actor message ^Duration timeout]
@@ -25,11 +25,11 @@
     @(? actor message)))
 
 (defn ?->
-  ([^AbstractActor actor message sender ^Dispatcher dispatcher ^Duration timeout]
+  ([^AbstractActor actor message sender ^ExecutionContext context ^Duration timeout]
    (-> actor
        (Patterns/ask message timeout)
        (.toCompletableFuture)
-       (Patterns/pipe dispatcher)
+       (Patterns/pipe context)
        (.to sender)))
   ([actor message sender dispatcher]
    (?-> actor message sender dispatcher (Duration/ofSeconds 1))))
@@ -63,17 +63,17 @@
 (defn get-state-in [state path]
   (get-in @state path))
 
-(defn config-value
+(defn config-value-from
   [data]
   (cond
     (map? data) (ConfigValueFactory/fromMap
-                  (into {} (map (fn [kv] [(config-value (key kv)) (config-value (val kv))])) data))
+                  (into {} (map (fn [kv] [(config-value-from (key kv)) (config-value-from (val kv))])) data))
     (sequential? data) (ConfigValueFactory/fromIterable
-                         (into [] (map config-value) data))
+                         (into [] (map config-value-from) data))
     (keyword? data) (name data)
     :else (ConfigValueFactory/fromAnyRef data)))
 
-(defn config-value-to-clj
+(defn config-value-to
   ([^ConfigValue config]
    (-> config
        .unwrapped

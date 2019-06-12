@@ -11,6 +11,7 @@ For Leiningen:
 
 ## What's New
 
+ - 0.1.11 rename config-value and config-value-to-clj to config-value-from and config-value-to
  - 0.1.10 add config get value to clojure overload
  - 0.1.9 add config value to clojure function 
  - 0.1.8 add a protected clojure actor state 

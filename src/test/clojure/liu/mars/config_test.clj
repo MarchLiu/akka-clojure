@@ -1,5 +1,5 @@
 (ns liu.mars.config-test
-  (:require [liu.mars.actor :refer [config-value]])
+  (:require [liu.mars.actor :refer [config-value-from]])
   (:require [clojure.test :refer :all])
   (:import (com.typesafe.config Config ConfigFactory)))
 
@@ -10,7 +10,7 @@
                        :netty              {:tcp {:hostname "192.168.99.1"
                                                   :port     25520}}}}
         ^Config config (-> (ConfigFactory/empty)
-                           (.withValue "akka" (config-value data)))]
+                           (.withValue "akka" (config-value-from data)))]
     (is (= (.getString config "akka.actor.provider") "remote"))
     (is (= (.getInt config "akka.remote.netty.tcp.port") 25520))
     (is (= (.getString config "akka.remote.netty.tcp.hostname") "192.168.99.1"))
