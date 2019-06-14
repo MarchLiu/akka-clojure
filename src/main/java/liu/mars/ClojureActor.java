@@ -44,12 +44,12 @@ public class ClojureActor extends AbstractActor {
         var partialFunction = new AbstractPartialFunction() {
             @Override
             public boolean isDefinedAt(Object message) {
-                return receiver.getMethod(receiver.dispatchFn.invoke(_this, message)) != null;
+                return fn.getMethod(fn.invoke(_this, message)) != null;
             }
 
             @Override
             public Object apply(Object message) {
-                return receiver.invoke(_this, message);
+                return fn.invoke(_this, message);
             }
         };
         return new Receive(partialFunction);
