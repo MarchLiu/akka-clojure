@@ -1,4 +1,4 @@
-(defproject liu.mars/akka-clojure "0.2.0"
+(defproject liu.mars/akka-clojure "0.2.1"
   :description "akka toolkit for clojure programmer"
   :url "https://github.com/MarchLiu/akka-clojure"
   :license {:name "Eclipse Public License"
