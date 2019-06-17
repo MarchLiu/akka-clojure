@@ -2,11 +2,11 @@
 
 Support akka for clojure. 
 
-## Usage
+## Install
 
 For Leiningen:
 ```
-[liu.mars/akka-clojure "0.1.8"]
+[liu.mars/akka-clojure "0.2.1"]
 ```
 
 ## What's New
