@@ -11,6 +11,7 @@ For Leiningen:
 
 ## What's New
 
+ - 0.2.2 add actor of without name
  - 0.2.1 improve for scala partial function constructors
  - 0.2.0 add scala partial function implementing use clojure multiFn 
  - 0.1.11 rename config-value and config-value-to-clj to config-value-from and config-value-to

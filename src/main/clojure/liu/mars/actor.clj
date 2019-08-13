@@ -18,6 +18,17 @@
    (let [timeout (Duration/ofSeconds 1)]
      (? actor message timeout))))
 
+(defn ask
+  "just same as ? "
+  ([actor message ^Duration timeout]
+   (future (-> actor
+               (Patterns/ask message timeout)
+               (.toCompletableFuture)
+               (.get))))
+  ([actor message]
+   (let [timeout (Duration/ofSeconds 1)]
+     (? actor message timeout))))
+
 (defn ??
   ([actor message ^Duration timeout]
     @(? actor message timeout))
@@ -34,13 +45,33 @@
   ([actor message sender dispatcher]
    (?-> actor message sender dispatcher (Duration/ofSeconds 1))))
 
+(defn forward
+  "just same as ?->"
+  ([^AbstractActor actor message sender ^ExecutionContext context ^Duration timeout]
+   (-> actor
+       (Patterns/ask message timeout)
+       (.toCompletableFuture)
+       (Patterns/pipe context)
+       (.to sender)))
+  ([actor message sender dispatcher]
+   (?-> actor message sender dispatcher (Duration/ofSeconds 1))))
+
 (defn !
   ([actor message sender]
    (.tell actor message sender))
   ([actor message]
    (.tell actor message (ActorRef/noSender))))
 
+(defn tell
+  "just same as ! "
+  ([actor message sender]
+   (.tell actor message sender))
+  ([actor message]
+   (.tell actor message (ActorRef/noSender))))
+
 (defn actor-of
+  ([^ActorSystem system ^MultiFn receiver]
+   (.actorOf system (ClojureActor/props receiver)))
   ([^ActorSystem system ^MultiFn receiver ^String name]
    (.actorOf system (ClojureActor/props receiver) name))
   ([^ActorSystem system ^IFn init ^MultiFn receiver ^String name]
@@ -83,3 +114,4 @@
        (.getValue path)
        .unwrapped
        keywordize-it)))
+
