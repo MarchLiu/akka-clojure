@@ -3,8 +3,7 @@
   (:import [liu.mars MultiPartialFunction]
            (clojure.lang MultiFn IFn)))
 
-(def ^{:private true}
-  default-hierarchy (make-hierarchy))
+(def default-hierarchy (make-hierarchy))
 
 (defmacro defpartial
   "Creates a new scala partial function with the associated dispatch function.

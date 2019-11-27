@@ -31,9 +31,9 @@
 
 (defn ??
   ([actor message ^Duration timeout]
-    @(? actor message timeout))
+   @(? actor message timeout))
   ([actor message]
-    @(? actor message)))
+   @(? actor message)))
 
 (defn ?->
   ([^AbstractActor actor message sender ^ExecutionContext context ^Duration timeout]
@@ -69,6 +69,13 @@
   ([actor message]
    (.tell actor message (ActorRef/noSender))))
 
+(defn receiver
+  [dispatcher & args]
+  (let [receiver (MultiFn. "receiver" dispatcher :default #'liu.mars.scala-partial/default-hierarchy)]
+    (doseq [[k v] (partition 2 args)]
+      (.addMethod receiver k v))
+    receiver))
+
 (defn actor-of
   ([^ActorSystem system ^MultiFn receiver]
    (.actorOf system (ClojureActor/props receiver)))
@@ -78,6 +85,17 @@
    (.actorOf system (ClojureActor/propsWithInit init receiver) name))
   ([^ActorSystem system ^IFn init ^Agent state ^MultiFn receiver ^String name]
    (.actorOf system (ClojureActor/propsWithStateInit init state receiver) name)))
+
+(defn of
+  ([^ActorSystem system]
+   (fn [& args]
+     (if (string? (first args))
+       (let [name (first args)
+             dispatcher (second args)
+             actions (drop 2 args)]
+         (actor-of system (apply receiver dispatcher actions)
+                   name))
+       (actor-of system (apply receiver args))))))
 
 (defn new-state
   []

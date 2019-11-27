@@ -10,7 +10,7 @@ For Leiningen:
 ```
 
 ## What's New
-
+ - 0.2.3 add a shortcut for declare actor inplace
  - 0.2.2 add actor of without name
  - 0.2.1 improve for scala partial function constructors
  - 0.2.0 add scala partial function implementing use clojure multiFn 

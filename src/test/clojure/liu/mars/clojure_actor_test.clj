@@ -1,5 +1,6 @@
 (ns liu.mars.clojure-actor-test
-  (:require [clojure.test :refer :all])
+  (:require [clojure.test :refer :all]
+            [liu.mars.actor :as actor :refer [!]])
   (:import (akka.actor ActorSystem)
            (liu.mars ClojureActor)
            (akka.testkit.javadsl TestKit)
@@ -50,4 +51,43 @@
     (await)
     (.expectMsgClass test-kit String)
     (.stop system actor)
+    (TestKit/shutdownActorSystem system)))
+
+(deftest inplace-test
+  "tests for create actor by shortcut function"
+  (let [system (ActorSystem/create "test")
+        test-kit (TestKit. system)
+        await #(.awaitCond test-kit (reify Supplier (get [this] (.msgAvailable test-kit))))
+        self (.getRef test-kit)
+        of (actor/of system)
+        actor (of "actor"
+                  (fn [this message] (:category message))
+                  :order (fn [this message]
+                           (let [sender (.getSender this)
+                                 self (.getSelf this)
+                                 ! #(! %1 %2 self)]
+                             (println (str "receive a order message " message " in " this))
+                             (! sender (str "reply message for " (:content message)))))
+                  :form (fn [this message]
+                          (let [sender (.getSender this)
+                                self (.getSelf this)
+                                ! #(! %1 %2 self)]
+                            (println (str "receive a form message " message " in " this))
+                            (! sender (str "reply message for " (:content message))))))]
+    (! actor {:category :order :content "test order"} self)
+    (await)
+    (.expectMsgPF
+      test-kit
+      "check order esssage"
+      (reify Function
+        (apply [this message]
+          (is (= "reply message for test order" message)))))
+    (! actor {:category :form :content "test form"} self)
+    (await)
+    (.expectMsgPF
+      test-kit
+      "check form messsage"
+      (reify Function
+        (apply [this message]
+          (is (= "reply message for test form" message)))))
     (TestKit/shutdownActorSystem system)))
